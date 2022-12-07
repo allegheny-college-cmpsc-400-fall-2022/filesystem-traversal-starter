@@ -1,0 +1,95 @@
+setup: |
+  cd tree && poetry install
+  echo "Done installing project dependencies!"
+---
+
+# perform checks on a file
+- tree/tree/main.py:
+    - description: Ensure that the main.py file exists in the tree/tree/ directory
+      check: ConfirmFileExists
+    - description: Complete all TODOs, remove the TODO markers, and rewrite comments for tree.py
+      check: MatchFileFragment
+      options:
+        fragment: TODO
+        count: 0
+        exact: true
+    - description: Create a sufficient number of docstring (i.e., multiple-line) comments in tree.py
+      check: CountMultipleLineComments
+      options:
+        language: "Python"
+        count: 3
+        exact: false
+    - description: Create a sufficient number of single-line comments in tree.py
+      check: CountSingleLineComments
+      options:
+        language: "Python"
+        count: 5
+        exact: false
+
+# run a command
+- description: Pass the source code formatting checks run by black
+  command: cd tree && poetry run task black
+
+# run a command
+- description: Pass the linting checks run by flake8
+  command: cd tree && poetry run task flake8
+
+# run a command
+- description: Pass the import checks run by isort
+  command: cd tree && poetry run task isort
+
+# run a command
+- description: Pass the linting checks run by mypy
+  command: cd tree && poetry run task mypy
+
+# run a command
+- description: Pass the linting checks run by pydocstyle
+  command: cd tree && poetry run task pydocstyle
+
+# run a command
+- description: Pass the linting checks run by pylint
+  command: cd tree && poetry run task pylint
+
+# run a command
+- description: Pass the linting checks run by pymarkdown
+  command: cd tree && poetry run task markdownlint
+
+# perform checks on a file
+- writing/reflection.md:
+    - description: Ensure that the reflection.md file exists in the writing/ directory
+      check: ConfirmFileExists
+    - description: Complete all TODOs, remove the TODO markers, and rewrite comments for the reflection
+      check: MatchFileFragment
+      options:
+        fragment: TODO
+        count: 0
+        exact: true
+    - description: Delete the 'Add Your Name Here' prompt in the reflection file
+      check: MatchFileFragment
+      options:
+        fragment: "Add Your Name Here"
+        count: 0
+        exact: true
+    - description: Write a minimum number of meaningful words in the reflection
+      check: CountFileWords
+      options:
+        count: 500
+        exact: false
+    - description: Confirm that the markdown file has the correct number of headers
+      check: CountMarkdownTags
+      options:
+        tag: heading
+        count: 15
+        exact: false
+    - description: Confirm that the markdown file has the correct number of fenced code blocks
+      check: CountMarkdownTags
+      options:
+        tag: code_block
+        count: 6
+        exact: false
+
+# count number of commits in the GitHub repository
+- description: Have at least a specific minimum of commits in repository
+  check: CountCommits
+  options:
+    count: 10
